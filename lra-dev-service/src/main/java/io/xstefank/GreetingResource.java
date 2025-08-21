@@ -27,11 +27,11 @@ public class GreetingResource {
     public String lra(@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) String lraId) {
         System.out.println("GreetingResource.lra | " + "lraId = " + lraId);
         System.out.println("XXXXXXXXXXXXXXXx baseUri = " + baseUri);
-        Client client = ClientBuilder.newClient();
-        client.target("http://localhost:8082/hello")
-            .request()
-            .header(LRA.LRA_HTTP_CONTEXT_HEADER, lraId)
-            .get();
+//        Client client = ClientBuilder.newClient();
+//        client.target("http://localhost:8082/hello")
+//            .request()
+//            .header(LRA.LRA_HTTP_CONTEXT_HEADER, lraId)
+//            .get();
         return "Hello from Quarkus REST";
     }
 

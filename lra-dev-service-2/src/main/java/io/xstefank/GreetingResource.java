@@ -7,6 +7,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.lra.annotation.AfterLRA;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
@@ -15,11 +16,15 @@ import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 @Path("/hello")
 public class GreetingResource {
 
+    @ConfigProperty(name = "narayana.lra.base-uri")
+    String baseUri;
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @LRA(value = LRA.Type.REQUIRED, end = false)
     public String hello(@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) String lraId) {
         System.out.println("GreetingResource.hello | " + "lraId = " + lraId);
+        System.out.println("baseUri = " + baseUri);
         return "Hello from Quarkus REST with LRA! lraId = " + lraId;
     }
 
