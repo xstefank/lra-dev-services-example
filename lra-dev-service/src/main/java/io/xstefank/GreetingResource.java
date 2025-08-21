@@ -15,24 +15,34 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 
+import java.util.Optional;
+
 @Path("/hello")
 public class GreetingResource {
 
     @ConfigProperty(name = "narayana.lra.base-uri")
-    String baseUri;
+    Optional<String> baseUri;
+
+    @ConfigProperty(name = "quarkus.lra.base-uri")
+    Optional<String> quarkusBaseUri;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @LRA
     public String lra(@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) String lraId) {
         System.out.println("GreetingResource.lra | " + "lraId = " + lraId);
-        System.out.println("XXXXXXXXXXXXXXXx baseUri = " + baseUri);
-//        Client client = ClientBuilder.newClient();
-//        client.target("http://localhost:8082/hello")
-//            .request()
-//            .header(LRA.LRA_HTTP_CONTEXT_HEADER, lraId)
-//            .get();
+        System.out.println("XXXXXXXXXXXXXXXx baseUri = " + (baseUri.isPresent() ? baseUri.get() : "not set"));
+        System.out.println("XXXXXXXXXXXXXXXx quarkusBaseUri = " + (quarkusBaseUri.isPresent() ? quarkusBaseUri.get() : "not set"));
+        callService2(lraId);
         return "Hello from Quarkus REST";
+    }
+
+    private static void callService2(String lraId) {
+        Client client = ClientBuilder.newClient();
+        client.target("http://localhost:8082/hello")
+            .request()
+            .header(LRA.LRA_HTTP_CONTEXT_HEADER, lraId)
+            .get();
     }
 
     @PUT
